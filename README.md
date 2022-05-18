@@ -2,6 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Game flow
+1. Cards appear in a random order
+2. Clicking on a card marks it and triggers a reorder
+3. Click on an unmarked card marks it and triggers a reorder
+3. Click on a marked card ends the game with the player losing the game.
+4. Click on all remaining unmarked cards end the game with player winning the game.
+5. Game over modal pops up with current score and best score. 
+6. Best score and current score also visible in the header.
+
 ## Available Scripts
 
 In the project directory, you can run:
