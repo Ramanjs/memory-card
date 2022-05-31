@@ -1,110 +1,58 @@
-import React, { useState } from 'react';
-import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
 
-function Container() {
+function Container(props) {
   const [numMarked, setNumMarked] = useState(0);
-  const [cards, setCards] = useState([
-    {
-      url: './img/harry.jpg',
-      name: 'Harry Potter',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/hermione.jpg',
-      name: 'Hermione Granger',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/ron.jpg',
-      name: 'Ron Weasley',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/dumbledore.png',
-      name: 'Albus Dumbledore',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/snape.jpg',
-      name: 'Severus Snape',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/mcgonagall.jpg',
-      name: 'Minerva McGonagall',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/longbottom.jpg',
-      name: 'Neville Longbottom',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/lovegood.jpg',
-      name: 'Luna Lovegood',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/voldemort.jpg',
-      name: 'Lord Voldemort',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/hagrid.jpg',
-      name: 'Rubeus Hagrid',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/malfoy.jpg',
-      name: 'Draco Malfoy',
-      marked: false,
-      id: _.uniqueId('card-')
-    },
-    {
-      url: './img/black.jpg',
-      name: 'Sirius Black',
-      marked: false,
-      id: _.uniqueId('card-')
-    }
-  ]);
+  const [isGameOver, setIsGameOver] = useState(false);
+  //const [curScore, setCurScore] = useState(0);
+  //const [bestScore, setBestScore] = useState(0);
+  const [cards, setCards] = useState(JSON.parse(JSON.stringify(props.startingCards)));
 
   function handleClick(id) {
     const cardsCopy = JSON.parse(JSON.stringify(cards));
-    //let isGameOver = false;
     for (let card of cardsCopy) {
       if (card.id == id) {
         if (card.marked) {
-          gameOver("You lost");
+          setIsGameOver(true);
           break;
         } else {
           card.marked = true;
-          if (numMarked == 11) {
-            gameOver("You won");
-            break;
-          }
           setNumMarked(numMarked + 1);
+          props.setCurScore(props.curScore + 1);
         }
       }
     }
-    shuffle(cardsCopy);
+    setCards(cardsCopy);
   }
 
-  function gameOver(result) {
-    window.alert(result);
-  }
+  function gameOver() {
+    setCards(JSON.parse(JSON.stringify(props.startingCards)));
+    setIsGameOver(false);
+    setNumMarked(0);
+    props.setCurScore(0);
+    //setCards(startingCards);
+ }
 
-  function shuffle(cardsCopy) {
+  useEffect(() => {
+    if (isGameOver) {
+      gameOver();
+      if (props.curScore > props.bestScore) {
+        props.setBestScore(props.curScore);
+      }
+      //window.alert("You lost!");
+    } else if (numMarked == 12) {
+      gameOver();
+      if (props.curScore > props.bestScore) {
+        props.setBestScore(props.curScore);
+      }
+      //window.alert("You won!");
+    } else {
+      shuffle();
+    }
+  }, [isGameOver, numMarked]);
+
+  function shuffle() {
+    const cardsCopy = JSON.parse(JSON.stringify(cards));
     for (let i = cardsCopy.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         let temp = cardsCopy[i];
@@ -115,7 +63,7 @@ function Container() {
   }
 
   return (
-    <div className="container">
+    <div className="cards-container">
       {cards.map(card => 
         <Card name={card.name} url={card.url} id={card.id} onClick={handleClick} key={card.id}/>
       )}
