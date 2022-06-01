@@ -1,12 +1,16 @@
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Container from './components/Container';
-import { useState } from 'react';
+import Modal from './components/Modal';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import './style.css';
 
 function App() {
   const [curScore, setCurScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [result, setResult] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const startingCards = [
     {
       url: './img/harry.jpg',
@@ -82,10 +86,18 @@ function App() {
     }
   ];
 
+  useEffect(() => {
+    if (result) {
+      setIsModalVisible(true);
+    }
+  }, [result]);
+
   return (
-    <div> 
+    <div className="app"> 
       <Header curScore={curScore} bestScore={bestScore}/>
-      <Container curScore={curScore} bestScore={bestScore} setCurScore={setCurScore} setBestScore={setBestScore} startingCards={startingCards} />
+      <Container curScore={curScore} bestScore={bestScore} setCurScore={setCurScore} setBestScore={setBestScore} startingCards={startingCards} setResult={setResult}/>
+      <Footer />
+      {isModalVisible ? <Modal toggleModal={setIsModalVisible} message={result} /> : null}
     </div>
   );
 }

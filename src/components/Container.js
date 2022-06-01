@@ -4,8 +4,6 @@ import Card from './Card';
 function Container(props) {
   const [numMarked, setNumMarked] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  //const [curScore, setCurScore] = useState(0);
-  //const [bestScore, setBestScore] = useState(0);
   const [cards, setCards] = useState(JSON.parse(JSON.stringify(props.startingCards)));
 
   function handleClick(id) {
@@ -25,27 +23,25 @@ function Container(props) {
     setCards(cardsCopy);
   }
 
-  function gameOver() {
+  function gameOver(result) {
     setCards(JSON.parse(JSON.stringify(props.startingCards)));
     setIsGameOver(false);
     setNumMarked(0);
     props.setCurScore(0);
-    //setCards(startingCards);
+    props.setResult(result);
  }
 
   useEffect(() => {
     if (isGameOver) {
-      gameOver();
       if (props.curScore > props.bestScore) {
         props.setBestScore(props.curScore);
       }
-      //window.alert("You lost!");
+      gameOver("You lost :(");
     } else if (numMarked == 12) {
-      gameOver();
       if (props.curScore > props.bestScore) {
         props.setBestScore(props.curScore);
       }
-      //window.alert("You won!");
+      gameOver("You won!");
     } else {
       shuffle();
     }
