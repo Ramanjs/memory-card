@@ -24,11 +24,11 @@ function Container(props) {
   }
 
   function gameOver(result) {
+    props.setResult(result);
     setCards(JSON.parse(JSON.stringify(props.startingCards)));
     setIsGameOver(false);
     setNumMarked(0);
     props.setCurScore(0);
-    props.setResult(result);
  }
 
   useEffect(() => {

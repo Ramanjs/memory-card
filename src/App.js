@@ -92,6 +92,12 @@ function App() {
     }
   }, [result]);
 
+  useEffect(() => {
+    if (!isModalVisible) {
+      setResult("");
+    }
+  }, [isModalVisible]);
+
   return (
     <div className="app"> 
       <Header curScore={curScore} bestScore={bestScore}/>
